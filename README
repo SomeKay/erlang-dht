@@ -1,0 +1,71 @@
+Structured P2P network simulation in Erlang
+Author: Kristian Poslek
+
+_________________________________________________________________
+This is a very simple structured P2P network simulation in Erlang
+that's based on processes as peers and a self-organizing network.
+_________________________________________________________________
+
+Usage instructions
+==================
+
+Add the first peer
+Name = peer:add(name).
+Example: John = peer:add(john).
+
+Add any other peer
+Name = peer:add(name, Sponsor).
+where Sponsor is another peer already in the network.
+Example: Mary = peer:add(mary, John).
+
+Remove a peer
+Name!stop.
+where Name is the peer that should be removed.
+Example: John!stop.
+
+Display the status of a peer
+Name!status.
+where Name is the peer that's status should be displayed.
+Example: John!status.
+
+Display the whole ring
+Name!showRing.
+where Name is the peer that should be the starting point of the ring.
+Example: John!showRing.
+
+Add a resource
+Name!{put, resource}.
+where Name is the peer that's inserting a new resource into the network;
+the resource is going to be placed in the correct range of the ring.
+Example: John!{put, secretdocument}.
+
+Get a resource
+Name!{get, resource}.
+where Name is the peer that's getting a resource.
+Example: John!{get, secretdocument}.
+
+Input test data
+test:addItems(Name).
+where Name is the peer that should be adding the test data into the network.
+Ecample: test:addItems(John).
+
+Test scenario
+=============
+
+This little test scenario is designed to show how the network organizes itself
+when someone enters or exits.
+Enter these commands into the erl shell one after another.
+
+John = peer:add(john).
+Mary = peer:add(mary, John).
+Ann = peer:add(ann, Mary).
+Gordan = peer:add(gordan, John).
+Mary!showRing.
+Mary!{put, testdocument}.
+Mary!showRing.
+test:addItems(John).
+Ann!showRing.
+John!stop.
+Ann!showRing.
+NewJohn = peer:add(john, Mary).
+Ann!showRing.
